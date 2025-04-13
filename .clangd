@@ -1,0 +1,7 @@
+CompileFlags:
+  Add: 
+    - -I/home/paracite/Desktop/C-Projects/TLPI/include
+    - -I/home/paracite/Desktop/C-Projects/TLPI/lib/include
+
+
+
