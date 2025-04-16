@@ -1,39 +1,34 @@
-# Simple C Project Makefile
-
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -I./include
-LDFLAGS =
+CFLAGS = -Wall -Wextra -I./include -I./lib/include
 
 # Directories
 SRC_DIR = src
 OBJ_DIR = obj
-BIN_DIR = bin
-INCLUDE_DIR = include
+BUILD_DIR = build
 
-# Files
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
-EXECUTABLE = $(BIN_DIR)/program
+# Source and object files
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
+
+# Final executable
+TARGET = $(BUILD_DIR)/copy
 
 # Default target
-all: directories $(EXECUTABLE)
+all: $(TARGET)
 
-# Create necessary directories
-directories:
-	mkdir -p $(OBJ_DIR) $(BIN_DIR)
+# Link object files to create the binary
+$(TARGET): $(OBJS)
+	@mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $^
 
-# Link object files to create the executable
-$(EXECUTABLE): $(OBJ_FILES)
-	$(CC) $^ -o $@ $(LDFLAGS)
-
-# Compile source files into object files
+# Compile each .c file to a .o file
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Clean up generated files
+# Clean build artifacts
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	rm -rf $(OBJ_DIR) $(BUILD_DIR)
 
-# Phony targets
-.PHONY: all clean directories
+.PHONY: all clean
